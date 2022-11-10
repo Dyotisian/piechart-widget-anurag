@@ -1,0 +1,10 @@
+.container{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+.containerFlex{
+    display: flex;
+    justify-content: space-evenly;
+    flex-grow: 1;
+}

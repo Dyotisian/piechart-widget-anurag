@@ -1,0 +1,16 @@
+.devices{
+    border-radius: 10px;
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-around;
+    align-items: center;
+    background: #FFFFFF;
+    padding-block: 1em;
+    margin: 2em 1em;
+}
+.status{
+    font-size: 1.4rem;
+}
+.count{
+    font-size: 2.3rem;
+}

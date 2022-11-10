@@ -1,38 +1,17 @@
-.statistics{
-    width: 44%;
-}
-.devices{
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: #FFFFFF;
-    padding-block: 1em;
-    margin: 2em 1em;
-}
-.status{
-    font-size: 1.4rem;
-
-}
-.count{
-    font-size: 2.3rem;
-}
-.piechart{
+.widget{
     border-radius: 10px;
     margin: 2em 1em;
     background: #FFFFFF;
-    padding-block: 2em;
+    padding: 2em;
 }
-
-
-.chart{
+.pictographDropdown{
     flex-grow: 2;
     display: flex;
     flex-direction: column;
     margin-bottom: 1.5em;
     margin-inline: 1.5em;
 }
-.chartName{
+.pictographName{
     color: rgb(171, 171, 171);
     font-weight: 500;
     margin-bottom: 1em;

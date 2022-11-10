@@ -1,14 +1,14 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-function Piechart({ labels, data, backgroundColor }){
+function Doughnutchart({ labels, data, backgroundColor }){
 
     
     return(
-          <Pie 
+          <Doughnut 
             data={{
                 labels: labels,
                 datasets: [
@@ -24,7 +24,8 @@ function Piechart({ labels, data, backgroundColor }){
                 legend: {
                   position: "bottom",
                 },
-              }
+              },
+              cutout: 60
             }}
             width={350}
             height={350}
@@ -32,4 +33,4 @@ function Piechart({ labels, data, backgroundColor }){
     )   
 }
 
-export default Piechart;
+export default Doughnutchart;

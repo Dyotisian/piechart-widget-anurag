@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Charts from "./components/Charts";
+import Widgets from "./components/Widgets";
 import Sidebar from "./components/Sidebar";
 import styles from './css/App.module.css';
 
@@ -9,7 +9,7 @@ function App(){
   return (
     <main className={styles.main}>
         <Sidebar setIsClicked={setIsClicked} isClicked={isClicked} />
-        {isClicked && <Charts/>}
+        {isClicked && <Widgets/>}
     </main>
   )
 }
