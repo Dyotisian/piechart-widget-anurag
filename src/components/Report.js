@@ -1,23 +1,25 @@
 import React from "react";
 import Table from 'react-bootstrap/Table';
+import Tablerow from "./Tablerow";
 
 function Report(props){
-    // console.log(props.allDevicesData);
-
-    const allRows = props.allDevicesData
+    
+    // console.log(props.allDevicesData)
+    const allRows = props.allDevicesData.map(device => <Tablerow key={device.id} 
+                                                                device={device} />)
     return (
         <Table striped>
             <thead>
                 <tr>
-                    <th>S.No.</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Status</th>
+                    <th onClick={() => props.sortHandle('id')}>S.No.</th>
+                    <th onClick={() => props.sortHandle('nodeId')}>ID</th>
+                    <th onClick={() => props.sortHandle('nodeName',true)}>Name</th>
+                    <th onClick={() => props.sortHandle('category',true)}>Category</th>
+                    <th onClick={() => props.sortHandle('status')}>Status</th>
                 </tr>
             </thead>
             <tbody>
-                
+                {allRows}
             </tbody>
         </Table>
     )

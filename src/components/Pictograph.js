@@ -62,6 +62,7 @@ function Pictograph(props){
     }
     else if(optionSelected === 'Report'){
         widget = <Report allDevicesData={props.allDevicesData}
+                            sortHandle={props.sortHandle}
                     />
     }
     return (

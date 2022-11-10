@@ -48,9 +48,19 @@ function Widgets(){
               return newCategoryAllDevices;
             });
         }
-  
+        
         fetchData();
     },[]);
+
+    function sortHandle(field,isString = false){
+      setAllDevicesData((prevAllDevicesData) => {
+        const newAllDevicesData = [...prevAllDevicesData]
+        if(isString) newAllDevicesData.sort((a,b) => a[field].localeCompare(b[field]));
+        else newAllDevicesData.sort((a,b) => a[field] - b[field]);
+
+        return newAllDevicesData;
+      })
+    }
 
     return (
         <section className={styles.container}>
@@ -61,15 +71,14 @@ function Widgets(){
                         countDevices={activeDevices} />
             </div>
             <div className={styles.containerFlex}>
-              {/* <div> */}
               <Pictograph type='total' 
-                            categoryDevices={categoryDevices} allDevicesData={allDevicesData} />
-              {/* </div> */}
-              {/* <div> */}
+                          categoryDevices={categoryDevices} 
+                          allDevicesData={allDevicesData} 
+                          sortHandle={sortHandle}/>
               <Pictograph type='active'
-                            categoryDevices={categoryDevices} allDevicesData={allDevicesData} />
-              {/* </div> */}
-              
+                            categoryDevices={categoryDevices}
+                            allDevicesData={allDevicesData}
+                            sortHandle={sortHandle} />
             </div>
         </section>
     )
