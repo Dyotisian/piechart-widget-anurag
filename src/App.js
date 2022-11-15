@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Widgets from "./components/Widgets";
 import Sidebar from "./components/Sidebar";
+import WidgetsContainer from "./components/WidgetsContainer";
 import styles from './css/App.module.css';
+
 
 function App(){
   const [isClicked,setIsClicked] = useState(false);
@@ -9,7 +10,7 @@ function App(){
   return (
     <main className={styles.main}>
         <Sidebar setIsClicked={setIsClicked} isClicked={isClicked} />
-        {isClicked && <Widgets/>}
+        {isClicked && <WidgetsContainer/>}
     </main>
   )
 }

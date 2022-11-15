@@ -1,86 +1,216 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 import styles from '../css/Widgets.module.css';
-import Counter from "./Counter";
-import Pictograph from "./Pictograph";
+import { DragDropContext } from 'react-beautiful-dnd';
+import Column from "./Column";
+import DUMMY_USERS from "../Config";
 
-function Widgets(){
-    const [totalDevices,setTotalDevices] = useState(0);
-    const [activeDevices,setActiveDevices] = useState(0);
-    const [allDevicesData, setAllDevicesData] = useState([]);
-    const [categoryDevices,setCategoryDevices] = useState({});
+function Widgets(props){
+    const { totalDevices, activeDevices, categoryDevices, allDevicesData } = props.widgetsData
+    const [user,setUser] = useState('Anurag');
+    const [allUsers, setAllUsers] = useState(JSON.parse(sessionStorage.getItem('dummy')) || DUMMY_USERS);
 
-    useEffect(() => {
-        async function fetchData(){
-            const response = await axios.get('https://telemetry.coraltele.com/app/v2/asset/list');
-
-            const allDevicesData = response.data.data
-            setAllDevicesData(response.data.data);
-
-            setTotalDevices(allDevicesData.length);
-            setActiveDevices(allDevicesData.reduce((prev,curr) => prev + curr.status, 0)
-                             .toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
-
-            setCategoryDevices(() => {
-              const newCategoryAllDevices = {};
-  
-              for(let i = 0; i < allDevicesData.length; i++){
-                const category = allDevicesData[i].category;
-  
-                if(newCategoryAllDevices[category]){
-                  newCategoryAllDevices[category].totalDevices++;
-                  if(allDevicesData[i].status) newCategoryAllDevices[category].activeDevices++;
-                }
-                else{
-                  newCategoryAllDevices[category] = {};
-  
-                  newCategoryAllDevices[category].totalDevices = 1;
-                  if(allDevicesData[i].status) newCategoryAllDevices[category].activeDevices = 1;
-  
-                  const red = Math.floor(Math.random() * 256);
-                  const green = Math.floor(Math.random() * 256);
-                  const blue = Math.floor(Math.random() * 256);
-  
-                  newCategoryAllDevices[category].color = `rgba(${red},${green},${blue},1)`;
-                }
-              }
-  
-              return newCategoryAllDevices;
-            });
+    const [widgetsData,setWidgetsData] = useState({
+      widgets: {
+        'widget-1': {
+          id: 'widget-1',
+          type: 'counter',
+          counterType: 'total',
+          count: totalDevices,
+          pictographType: '',
+          categoryDevices: {},
+          allDevicesData: [],
+        },
+        'widget-2': {
+          id: 'widget-2',
+          type: 'pictograph',
+          counterType: '',
+          count: 0,
+          pictographType: 'total',
+          categoryDevices: categoryDevices,
+          allDevicesData: allDevicesData
+        },
+        'widget-3': {
+          id: 'widget-3',
+          type: 'counter',
+          counterType: 'active',
+          count: activeDevices,
+          pictographType: '',
+          categoryDevices: {},
+          allDevicesData: []
+        },
+        'widget-4': {
+          id: 'widget-4',
+          type: 'pictograph',
+          counterType: '',
+          count: 0,
+          pictographType: 'active',
+          categoryDevices: categoryDevices,
+          allDevicesData: allDevicesData
         }
+      },
+      columns: allUsers[user].columns,
+      columnOrder: allUsers[user].columnOrder
+    });
+
+    const [selectedChart, setSelectedChart] = useState({
+      'widget-2': {
+        id: 'widget-2',
+        chart: 'Pie'
+      },
+      'widget-4': {
+        id: 'widget-4',
+        chart: 'Pie'
+      }
+    });
+    
+    useEffect(() => {
+        sessionStorage.setItem('dummy',JSON.stringify({
+          ...allUsers,
+          [user]: {
+            name: user,
+            widgets: allUsers[user].widgets,
+            columns: widgetsData.columns,
+            columnOrder: widgetsData.columnOrder
+          }
+        }));
+    },[widgetsData])
+
+
+    function handleOnDragEnd(result){
+      const { destination, source, draggableId } = result;
+
+      if(!destination) return;
+      else if(destination.droppableId === source.droppableId 
+        && destination.index === source.index) return;
+      else{
+        const startColumn = widgetsData.columns[source.droppableId];
+        const finishColumn = widgetsData.columns[destination.droppableId];
+  
+        const newStartColumnWidgetIds = [...startColumn.widgetIds];
+        newStartColumnWidgetIds.splice(source.index,1);
+  
         
-        fetchData();
-    },[]);
+        if(source.droppableId === destination.droppableId){
+          newStartColumnWidgetIds.splice(destination.index,0,draggableId);
+          
+          const newStartColumn = {
+            ...startColumn,
+            widgetIds: newStartColumnWidgetIds
+          }
+  
+          setWidgetsData(prevWidgetsData => {
+            return {
+              ...prevWidgetsData,
+              columns: {
+                ...prevWidgetsData.columns,
+                [newStartColumn.id]: newStartColumn
+              }
+            }
+          });
+        }else{
+          const newFinishColumnWidgetIds = [...finishColumn.widgetIds];
+  
+          newFinishColumnWidgetIds.splice(destination.index,0,draggableId);
+          
+          const newStartColumn = {
+            ...startColumn,
+            widgetIds: newStartColumnWidgetIds
+          }
+  
+          const newFinishColumn = {
+            ...finishColumn,
+            widgetIds: newFinishColumnWidgetIds
+          }
+    
+          setWidgetsData(prevWidgetsData => {
+            return {
+              ...prevWidgetsData,
+              columns: {
+                ...prevWidgetsData.columns,
+                [newStartColumn.id]: newStartColumn,
+                [newFinishColumn.id]: newFinishColumn
+              }
+            }
+          });
+  
+        }
+      }    
+      
 
-    function sortHandle(field,isString = false){
-      setAllDevicesData((prevAllDevicesData) => {
-        const newAllDevicesData = [...prevAllDevicesData]
-        if(isString) newAllDevicesData.sort((a,b) => a[field].localeCompare(b[field]));
-        else newAllDevicesData.sort((a,b) => a[field] - b[field]);
-
-        return newAllDevicesData;
-      })
     }
 
+    const allColumns = widgetsData.columnOrder.map(columnId => {
+                        const column = widgetsData.columns[columnId];
+                        const columnWidgets = column.widgetIds.map(widgetId => widgetsData.widgets[widgetId]);
+
+                        return <Column key={columnId}
+                                      columnId={columnId}
+                                      columnWidgets={columnWidgets} 
+                                      selectedChart={selectedChart}
+                                      setSelectedChart={setSelectedChart}
+                                />
+                      });
+
+    function handleChange(e){
+      setUser(e.target.value)
+      setWidgetsData(prevWidgetsData => {
+        return {
+          ...prevWidgetsData,
+          columns: allUsers[e.target.value].columns,
+          columnOrder: allUsers[e.target.value].columnOrder
+        }
+      });
+      setAllUsers(prevAllUsers => {
+        return {
+          ...prevAllUsers,
+          [user]: {
+            name: user,
+            widgets: prevAllUsers[user].widgets,
+            columns: widgetsData.columns,
+            columnOrder: widgetsData.columnOrder
+          }
+        }
+      });
+    }
+
+
     return (
+      <>
+        <div>
+          <div>
+            <input onChange={handleChange} 
+                    type="radio" 
+                    id="anurag" 
+                    name="user" 
+                    value="Anurag"
+            />
+            <label htmlFor="anurag">Anurag</label>
+          </div>
+          <div>
+            <input onChange={handleChange} 
+                    type="radio" 
+                    id="rohit" 
+                    name="user" 
+                    value="Rohit"
+            />
+            <label htmlFor="rohit">Rohit</label>
+          </div>
+          <div>
+            <input onChange={handleChange} 
+                    type="radio" 
+                    id="faiz" 
+                    name="user" 
+                    value="Faiz"
+            />
+            <label htmlFor="faiz">Faiz</label>
+          </div>
+        </div>
         <section className={styles.container}>
-            <div className={styles.containerFlex}>
-              <Counter type='total'
-                        countDevices={totalDevices} />
-              <Counter type='active'
-                        countDevices={activeDevices} />
-            </div>
-            <div className={styles.containerFlex}>
-              <Pictograph type='total' 
-                          categoryDevices={categoryDevices} 
-                          allDevicesData={allDevicesData} 
-                          sortHandle={sortHandle}/>
-              <Pictograph type='active'
-                            categoryDevices={categoryDevices}
-                            allDevicesData={allDevicesData}
-                            sortHandle={sortHandle} />
-            </div>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            {allColumns}
+          </DragDropContext>
         </section>
+      </>
     )
 }
 

@@ -25,10 +25,10 @@ function Doughnutchart({ labels, data, backgroundColor }){
                   position: "bottom",
                 },
               },
-              cutout: 60
+              cutout: 50
             }}
-            width={350}
-            height={350}
+            width={300}
+            height={300}
         />
     )   
 }

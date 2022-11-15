@@ -1,29 +1,33 @@
 .widget{
     border-radius: 10px;
-    margin: 2em 1em;
+    margin: 1em;
     background: #FFFFFF;
-    padding: 2em;
+    padding: 1em;
+    position: relative;
+    min-width: 21em;
 }
-.pictographDropdown{
-    flex-grow: 2;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.5em;
-    margin-inline: 1.5em;
+.badge{
+    width: 2.4em;
+    height: 2.4em;
+    background: linear-gradient(rgb(100, 100, 100),rgb(73, 73, 73));
+    position: absolute;
+    top: -1em;
+    border-radius: 5px;
 }
-.pictographName{
+.dropdownName{
     color: rgb(171, 171, 171);
     font-weight: 500;
+    margin-top: 1em;
     margin-bottom: 1em;
-}
-.optionSelected{
-    font-weight: 700;
-    font-size: 1rem;
 }
 .dropdownContainer{
     display: flex;
     align-items: center;
     position: relative;
+}
+.optionSelected{
+    font-weight: 700;
+    font-size: 1rem;
 }
 .dropdown{
     display: flex;

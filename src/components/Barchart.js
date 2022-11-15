@@ -24,15 +24,22 @@ function Barchart({ labels, data, backgroundColor }){
     return (
         <Bar 
             options={{
-                maintainAspectRatio: false,
                 plugins: {
                   legend: {
                     position: 'bottom',
                   },
                   title: {
                     display: true,
-                    text: 'Chart.js Bar Chart',
+                    text: 'Devices of different category',
+                  }
+                },
+                scales: {
+                  layout: {
+                    padding: {
+                      top: 200
+                    }
                   },
+                  
                 }
             }} 
             data={{

@@ -26,8 +26,8 @@ function Piechart({ labels, data, backgroundColor }){
                 },
               }
             }}
-            width={350}
-            height={350}
+            width={300}
+            height={300}
         />
     )   
 }

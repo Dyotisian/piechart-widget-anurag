@@ -2,7 +2,7 @@
     border-radius: 15px;
     background: rgb(51, 51, 51);
     color: #FFFFFF;
-    margin: 2em;
+    margin: 1em;
     padding: 1em;
     flex-grow: 1;
 }
@@ -22,7 +22,6 @@
     text-align: center;
     font-size: 1.1rem;
     cursor: pointer;
-    /* border: 1px solid red; */
     padding: .7em;
     max-width: 18em;
     margin: auto;
